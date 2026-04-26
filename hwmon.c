@@ -125,6 +125,21 @@ static const struct hwmon_chip_info hsmp_chip_info = {
 	.info = hsmp_info,
 };
 
+static ssize_t socket_id_show(struct device *dev,
+			      struct device_attribute *attr, char *buf)
+{
+	u16 sock_ind = (uintptr_t)dev_get_drvdata(dev);
+
+	return sysfs_emit(buf, "%u\n", sock_ind);
+}
+static DEVICE_ATTR_RO(socket_id);
+
+static struct attribute *hsmp_hwmon_attrs[] = {
+	&dev_attr_socket_id.attr,
+	NULL
+};
+ATTRIBUTE_GROUPS(hsmp_hwmon);
+
 int hsmp_create_sensor(struct device *dev, u16 sock_ind)
 {
 	struct device *hwmon_dev;
@@ -132,7 +147,7 @@ int hsmp_create_sensor(struct device *dev, u16 sock_ind)
 	hwmon_dev = devm_hwmon_device_register_with_info(dev, HSMP_HWMON_NAME,
 							 (void *)(uintptr_t)sock_ind,
 							 &hsmp_chip_info,
-							 NULL);
+							 hsmp_hwmon_groups);
 	return PTR_ERR_OR_ZERO(hwmon_dev);
 }
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 13, 0)
