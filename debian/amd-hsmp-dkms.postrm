@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+	remove|purge)
+		rm -f /etc/modules-load.d/amd_hsmp.conf
+		;;
+esac

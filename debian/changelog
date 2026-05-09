@@ -1,0 +1,5 @@
+amd-hsmp-dkms (2.4) trixie; urgency=medium
+
+  * Package AMD HSMP as a DKMS Debian package.
+
+ -- eWloYW8 <3171132517@qq.com>  Sat, 09 May 2026 19:50:02 +0800

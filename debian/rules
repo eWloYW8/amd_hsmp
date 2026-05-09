@@ -1,0 +1,35 @@
+#!/usr/bin/make -f
+
+PACKAGE := amd-hsmp-dkms
+DKMS_NAME := amd_hsmp
+VERSION := $(shell dpkg-parsechangelog -SVersion)
+BUILD_DIR := debian/$(PACKAGE)
+DKMS_SRC_DIR := $(BUILD_DIR)/usr/src/$(DKMS_NAME)-$(VERSION)
+DOC_DIR := $(BUILD_DIR)/usr/share/doc/$(PACKAGE)
+
+build build-arch build-indep:
+	:
+
+clean:
+	rm -rf $(BUILD_DIR) debian/files debian/*.substvars
+
+binary: binary-arch
+
+binary-arch: build-arch
+	rm -rf $(BUILD_DIR)
+	install -d $(BUILD_DIR)/DEBIAN $(DKMS_SRC_DIR) $(DOC_DIR)
+	install -m 0644 Kbuild Makefile dkms.conf *.c *.h *.rst $(DKMS_SRC_DIR)/
+	install -m 0644 README.md RELEASENOTES.md $(DKMS_SRC_DIR)/
+	install -m 0755 debian/amd-hsmp-dkms.postinst $(BUILD_DIR)/DEBIAN/postinst
+	install -m 0755 debian/amd-hsmp-dkms.prerm $(BUILD_DIR)/DEBIAN/prerm
+	install -m 0755 debian/amd-hsmp-dkms.postrm $(BUILD_DIR)/DEBIAN/postrm
+	install -m 0644 debian/copyright $(DOC_DIR)/copyright
+	gzip -cn9 debian/changelog > $(DOC_DIR)/changelog.Debian.gz
+	chmod 0644 $(DOC_DIR)/changelog.Debian.gz
+	dpkg-gencontrol -p$(PACKAGE) -P$(BUILD_DIR)
+	dpkg-deb --root-owner-group --build $(BUILD_DIR) ..
+
+binary-indep: build-indep
+	:
+
+.PHONY: build build-arch build-indep clean binary binary-arch binary-indep

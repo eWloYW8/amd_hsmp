@@ -1,0 +1,20 @@
+Source: amd-hsmp-dkms
+Section: kernel
+Priority: optional
+Maintainer: eWloYW8 <3171132517@qq.com>
+Build-Depends: dpkg-dev
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://developer.amd.com/resources/epyc-resources/epyc-specifications
+
+Package: amd-hsmp-dkms
+Architecture: amd64
+Depends: dkms (>= 2.1.0.0), gcc | c-compiler, kmod, make
+Recommends: linux-headers-amd64 | linux-headers-generic
+Description: DKMS source for the AMD HSMP kernel module
+ The Host System Management Port (HSMP) kernel module provides user space
+ access to the HSMP mailboxes implemented by AMD platform firmware.
+ .
+ This package installs the AMD HSMP module source for DKMS. DKMS builds and
+ installs the modules for installed kernels during package configuration and
+ when kernel headers are upgraded.
